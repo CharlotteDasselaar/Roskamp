@@ -95,6 +95,12 @@ else:
 
 
 def update_pearls():
+    # Vind de juiste borden om te updaten
+    # Wat zijn de juiste zetten?
+    # update de juiste zetten van de juiste borden met + of - een getal
+    # clear the huidige zetten
+    # clear de  huidige borden
+    # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
     pass
 
 
