@@ -55,6 +55,7 @@ def make_move(idx):
 
 def AI_make_move(idx):
     if st.session_state.board[idx] == "" and not st.session_state.winner and st.session_state.current_player == "O":
+        pass
         # Look into what board there is.
 
         # Check the kralen
