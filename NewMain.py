@@ -87,11 +87,15 @@ if st.session_state.winner:
             # -1 als speler wint
     # Update de kralen
 
-def update_pearls():
-    pass
+
 
 else:
     st.write(f"Current Turn: **Player {st.session_state.current_player}**")
+
+
+def update_pearls():
+    pass
+
 
 # 4. Render the 3x3 board
 for row in range(3):
