@@ -7,15 +7,15 @@ st.title("Boter Kaas en AIeren")
 
 # 1. Initialize persistent state
 if "board" not in st.session_state:
-    st.session_state.board = [""] * 9
+    st.session_state.board = "_" * 9 # String lenght 9
 if "current_player" not in st.session_state:
-    st.session_state.current_player = "X"
+    st.session_state.current_player = "X" # Character
 if "winner" not in st.session_state:
     st.session_state.winner = None
 if "history" not in st.session_state:
-    st.session_state.history = {}
+    st.session_state.history = {} # Dict
 if "current_game" not in st.session_state:
-    st.session_state.current_game = {}
+    st.session_state.current_game = {} # Dict
 
 # Optional CSS to make the buttons appear large and square
 st.markdown(
@@ -56,22 +56,22 @@ def update_pearls(score):
 
 
 # 2. Game logic functions
-def check_winner(board):
+def check_winner(board): # Here it might go BOOM if turned into string
     win_lines = [
         (0, 1, 2), (3, 4, 5), (6, 7, 8),  # Rows
         (0, 3, 6), (1, 4, 7), (2, 5, 8),  # Columns
         (0, 4, 8), (2, 4, 6),  # Diagonals
     ]
     for a, b, c in win_lines:
-        if board[a] and board[a] == board[b] == board[c]:
+        if board[a] != "_" and board[a] == board[b] == board[c]:
             return board[a]
-    if "" not in board:
+    if "_" not in board:
         return "Tie"
     return None
 
 
 def make_move(idx):
-    if st.session_state.board[idx] == "" and not st.session_state.winner: # and st.session_state.current_player == "X":
+    if st.session_state.board[idx] == "_" and not st.session_state.winner and st.session_state.current_player == "X":
         st.session_state.board[idx] = st.session_state.current_player
         winner = check_winner(st.session_state.board)
         if winner:
@@ -103,7 +103,11 @@ def AI_make_move():
             if pearl_number < 0:
                 index_pearl = idx
 
-        st.session_state.board[index_pearl] = st.session_state.current_player
+        if st.session_state.board[index_pearl] != "_":
+            st.session_state.board[index_pearl] = st.session_state.current_player
+        else:
+            raise Exception("Wrong index for AI to make move")
+
         winner = check_winner(st.session_state.board)
         if winner:
             st.session_state.winner = winner
@@ -112,11 +116,8 @@ def AI_make_move():
 
 
 
-        # Kies het vakje van de kraal
-
-
 def reset_game():
-    st.session_state.board = [""] * 9
+    st.session_state.board = "_" * 9
     st.session_state.current_player = "X"
     st.session_state.winner = None
     st.session_state.current_game = {}
