@@ -3,7 +3,7 @@ from random import randint
 import streamlit as st
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
-st.title("Tic-Tac-Toe")
+st.title("Boter Kaas en AIeren")
 
 # 1. Initialize persistent state
 if "board" not in st.session_state:
@@ -77,7 +77,10 @@ def make_move(idx):
         if winner:
             st.session_state.winner = winner
         else:
-            st.session_state.current_player = "O" if st.session_state.current_player == "X" else "X"
+            st.session_state.current_player = "O"
+            AI_make_move()
+
+
 
 def AI_make_move():
     if not st.session_state.winner and st.session_state.current_player == "O":
@@ -93,7 +96,7 @@ def AI_make_move():
 
         # kies een random getal tussen 0 en de som kralen
         pearl_number = randint(0,sum(pearls))
-        index_pearl
+        index_pearl = 8
         # pick een random kraal (vind de index)
         for idx in range(pearls):
             pearl_number -= pearls[idx]
@@ -105,7 +108,7 @@ def AI_make_move():
         if winner:
             st.session_state.winner = winner
         else:
-            st.session_state.current_player = "O" if st.session_state.current_player == "X" else "X"
+            st.session_state.current_player = "X"
 
 
 
@@ -136,8 +139,6 @@ if st.session_state.winner:
         # Speler wint
             # -1 als speler wint
     # Update de kralen
-
-
 
 else:
     st.write(f"Current Turn: **Player {st.session_state.current_player}**")
