@@ -1,3 +1,5 @@
+from random import randint
+
 import streamlit as st
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
@@ -12,6 +14,8 @@ if "winner" not in st.session_state:
     st.session_state.winner = None
 if "history" not in st.session_state:
     st.session_state.history = {}
+if "current_game" not in st.session_state:
+    st.session_state.current_game = {}
 
 # Optional CSS to make the buttons appear large and square
 st.markdown(
@@ -27,6 +31,28 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+def init_pearls(start_pearl_amount = 3):
+    """
+    Creates the pearls (trainable entity) for this board in the game.
+    This function is used when there is no
+    :return:
+    """
+    st.session_state.current_game[st.session_state.board] = [start_pearl_amount if cell == "" else 0 for cell in st.session_state.board]
+
+    # For every already filled in thing it needs to not have -> add if statement to init
+
+def update_pearls(score):
+    # Vind de juiste borden om te updaten
+        # Boards waarbij geldt dat er meer x'en zijn dan o's?
+    # Wat zijn de juiste zetten?
+    # update de juiste zetten van de juiste borden met + of - een getal
+    # clear the huidige zetten
+    # clear de  huidige borden
+    # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
+    pass
+
+
 
 
 # 2. Game logic functions
@@ -53,18 +79,35 @@ def make_move(idx):
         else:
             st.session_state.current_player = "O" if st.session_state.current_player == "X" else "X"
 
-def AI_make_move(idx):
-    if st.session_state.board[idx] == "" and not st.session_state.winner and st.session_state.current_player == "O":
-        pass
+def AI_make_move():
+    if not st.session_state.winner and st.session_state.current_player == "O":
+        #pass
         # Look into what board there is.
-
-        # Check the kralen
+        if not st.session_state.history[st.session_state.board]:
+            init_pearls()
+        else:
+            st.session_state.current_game[st.session_state.board] = st.session_state.history[st.session_state.board]
 
         # Bereken de som kralen
+        pearls = st.session_state.current_game[st.session_state.board]
 
         # kies een random getal tussen 0 en de som kralen
-
+        pearl_number = randint(0,sum(pearls))
+        index_pearl
         # pick een random kraal (vind de index)
+        for idx in range(pearls):
+            pearl_number -= pearls[idx]
+            if pearl_number < 0:
+                index_pearl = idx
+
+        st.session_state.board[index_pearl] = st.session_state.current_player
+        winner = check_winner(st.session_state.board)
+        if winner:
+            st.session_state.winner = winner
+        else:
+            st.session_state.current_player = "O" if st.session_state.current_player == "X" else "X"
+
+
 
         # Kies het vakje van de kraal
 
@@ -73,13 +116,19 @@ def reset_game():
     st.session_state.board = [""] * 9
     st.session_state.current_player = "X"
     st.session_state.winner = None
+    st.session_state.current_game = {}
+
+def reset_history():
+    st.session_state.history = {}
+    reset_game()
 
 
 # 3. Status display
 if st.session_state.winner:
     if st.session_state.winner == "Tie":
         st.info("🤝 It's a draw!")
-        # + 1 for all moves by AI in this round
+        # + 1 for all moves by AI in this round -> RUN UPDATE PEARLS
+        update_pearls(1)
     else: # Check of speler of AI heeft gewonnen ->
         st.success(f"🎉 Player **{st.session_state.winner}** wins!")
         # AI wint
@@ -94,19 +143,9 @@ else:
     st.write(f"Current Turn: **Player {st.session_state.current_player}**")
 
 
-def update_pearls():
-    # Vind de juiste borden om te updaten
-    # Wat zijn de juiste zetten?
-    # update de juiste zetten van de juiste borden met + of - een getal
-    # clear the huidige zetten
-    # clear de  huidige borden
-    # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
-    pass
-
-
 # 4. Render the 3x3 board
 for row in range(3):
-    cols = st.columns(3)
+    cols = st.columns(3, width = 90 * 3)
     for col in range(3):
         idx = row * 3 + col
         cell_value = st.session_state.board[idx]
