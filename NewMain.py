@@ -120,7 +120,7 @@ def AI_make_move():
         if winner:
             st.session_state.winner = winner
         else:
-            st.session_state.current_player = "X"
+            st.session_state.current_player = "X" #
 
 
 
