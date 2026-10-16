@@ -1,6 +1,8 @@
 from random import randint
 
 import streamlit as st
+import random
+from torch.fx.passes.infra.pass_manager import pass_result_wrapper
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
 st.title("Boter Kaas en AIeren")
@@ -32,13 +34,22 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+def change_board(char, idx):
+    """
+    Changes board by inserting a character at a certain index.
+    :param char:
+    :param idx:
+    :return:
+    """
+    st.session_state.board = st.session_state.board[:idx] + char + st.session_state.board[idx + 1:]
+
 def init_pearls(start_pearl_amount = 3):
     """
     Creates the pearls (trainable entity) for this board in the game.
     This function is used when there is no
     :return:
     """
-    st.session_state.current_game[st.session_state.board] = [start_pearl_amount if cell == "" else 0 for cell in st.session_state.board]
+    st.session_state.current_game[st.session_state.board] = [start_pearl_amount if cell == "_" else 0 for cell in st.session_state.board]
 
     # For every already filled in thing it needs to not have -> add if statement to init
 
@@ -51,7 +62,6 @@ def update_pearls(score):
     # clear de  huidige borden
     # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
     pass
-
 
 
 
@@ -72,7 +82,8 @@ def check_winner(board): # Here it might go BOOM if turned into string
 
 def make_move(idx):
     if st.session_state.board[idx] == "_" and not st.session_state.winner and st.session_state.current_player == "X":
-        st.session_state.board[idx] = st.session_state.current_player
+        #st.session_state.board[idx] = st.session_state.current_player
+        change_board("X",idx)
         winner = check_winner(st.session_state.board)
         if winner:
             st.session_state.winner = winner
@@ -86,7 +97,7 @@ def AI_make_move():
     if not st.session_state.winner and st.session_state.current_player == "O":
         #pass
         # Look into what board there is.
-        if not st.session_state.history[st.session_state.board]:
+        if not st.session_state.board in st.session_state.history:
             init_pearls()
         else:
             st.session_state.current_game[st.session_state.board] = st.session_state.history[st.session_state.board]
@@ -94,17 +105,14 @@ def AI_make_move():
         # Bereken de som kralen
         pearls = st.session_state.current_game[st.session_state.board]
 
-        # kies een random getal tussen 0 en de som kralen
-        pearl_number = randint(0,sum(pearls))
-        index_pearl = 8
-        # pick een random kraal (vind de index)
-        for idx in range(pearls):
-            pearl_number -= pearls[idx]
-            if pearl_number < 0:
-                index_pearl = idx
+        if sum(pearls) == 0:
+            raise Exception("No pearl found")
+        else:
+            index_pearl = random.choices(range(len(pearls)), weights=pearls, k=1)[0]
 
-        if st.session_state.board[index_pearl] != "_":
-            st.session_state.board[index_pearl] = st.session_state.current_player
+        if st.session_state.board[index_pearl] == "_":
+            #st.session_state.board[index_pearl] = st.session_state.current_player
+            change_board(st.session_state.current_player, index_pearl)
         else:
             raise Exception("Wrong index for AI to make move")
 
@@ -158,7 +166,7 @@ for row in range(3):
             key=f"cell_{idx}",
             on_click=make_move,
             args=(idx,),
-            disabled=bool(cell_value or st.session_state.winner),
+            disabled=bool(cell_value != "_" or st.session_state.winner),
             use_container_width=True,
         )
 
