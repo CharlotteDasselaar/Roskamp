@@ -18,6 +18,9 @@ if "history" not in st.session_state:
     st.session_state.history = {} # Dict
 if "current_game" not in st.session_state:
     st.session_state.current_game = {} # Dict
+if "AI_moves" not in st.session_state:
+    st.session_state.AI_moves = []
+
 
 # Optional CSS to make the buttons appear large and square
 st.markdown(
@@ -27,7 +30,6 @@ st.markdown(
         height: 80px;
         font-size: 36px;
         font-weight: bold;
-        color: #1E88E5; /* 'color' in plaats van 'font-color' */
     }
     </style>
     """,
@@ -55,12 +57,25 @@ def init_pearls(start_pearl_amount = 3):
 
 def update_pearls(score):
     # Vind de juiste borden om te updaten
-        # Boards waarbij geldt dat er meer x'en zijn dan o's?
+    #boards_2_update = set()
+    boards_2_update = [
+        board for board in st.session_state.current_game
+        if board.count("X") > board.count("O")
+    ]
     # Wat zijn de juiste zetten?
+    for board in st.session_state.current_game.keys():
+        if board in boards_2_update:
+            board_tot_moves = board.count("X") + board.count("O")
+            # 0 -> x, 1-> 0, 2-> x, 3 -> 1,
+            index_for_AImoves = (board_tot_moves - 1) / 2
+            AImove = st.session_state.AI_moves[index_for_AImoves]
+            st.session_state.current_game[board][AImove] += score
+
     # update de juiste zetten van de juiste borden met + of - een getal
-    # clear the huidige zetten
-    # clear de  huidige borden
+    # clear the huidige zetten -> reset game
+    # clear de  huidige borden -> reset game
     # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
+    st.session_state.history.update(st.session_state.current_game)
     pass
 
 
@@ -95,7 +110,6 @@ def make_move(idx):
 
 def AI_make_move():
     if not st.session_state.winner and st.session_state.current_player == "O":
-        #pass
         # Look into what board there is.
         if not st.session_state.board in st.session_state.history:
             init_pearls()
@@ -113,6 +127,7 @@ def AI_make_move():
         if st.session_state.board[index_pearl] == "_":
             #st.session_state.board[index_pearl] = st.session_state.current_player
             change_board(st.session_state.current_player, index_pearl)
+            st.session_state.AI_moves.append(index_pearl)
         else:
             raise Exception("Wrong index for AI to make move")
 
@@ -129,6 +144,7 @@ def reset_game():
     st.session_state.current_player = "X"
     st.session_state.winner = None
     st.session_state.current_game = {}
+    st.session_state.AI_moves = []
 
 def reset_history():
     st.session_state.history = {}
@@ -148,7 +164,6 @@ if st.session_state.winner:
         # Speler wint
             # -1 als speler wint
     # Update de kralen
-
 else:
     st.write(f"Current Turn: **Player {st.session_state.current_player}**")
 
