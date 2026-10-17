@@ -190,10 +190,17 @@ for row in range(3):
             disabled=bool(cell_value != "_" or st.session_state.winner or st.session_state.random_player),
             use_container_width=True,
         )
+def random_player_enable():
+    if st.session_state.random_player:
+        st.session_state.random_player = False
+    else:
+        st.session_state.random_player = True
+    pass
 
 # 5. Controls
 st.button("Restart Game", on_click=reset_game, type="primary")
 st.button("Herstart geschiedenis", on_click=reset_history, type="primary")
+st.button("Random Speler", on_click= random_player_enable, type="primary")
 
 # Nog toe te voegen:
 

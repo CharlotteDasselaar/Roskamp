@@ -15,5 +15,7 @@ def question():
         # Show "Correct"
         # Keep in list of questions correct so we can go back to this question.
         # Go to next question
-    #
+    # Else:
+        # Give correct answer
+        # Explain why
     pass
