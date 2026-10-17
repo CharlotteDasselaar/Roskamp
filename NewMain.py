@@ -110,9 +110,12 @@ def make_move(idx):
             AI_make_move()
 
 def random_player_make_move():
+    # Check if runable
     # get indexis of "_"
+    list_pos_moves = [i for i, char in enumerate(st.session_state.board) if char == "_"]
+    random_move_index = random.choice(list_pos_moves)
     # pick random index out of list
-    # make_move(random_index)
+    make_move(random_move_index)
     pass
 
 
@@ -143,7 +146,9 @@ def AI_make_move():
         if winner:
             st.session_state.winner = winner
         else:
-            st.session_state.current_player = "X" #
+            st.session_state.current_player = "X"
+            if st.session_state.random_player:
+                random_player_make_move()
 
 
 
@@ -195,6 +200,8 @@ def random_player_enable():
         st.session_state.random_player = False
     else:
         st.session_state.random_player = True
+        if st.session_state.board == "_________":
+            random_player_make_move()
     pass
 
 # 5. Controls
