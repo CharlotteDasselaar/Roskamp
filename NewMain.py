@@ -1,6 +1,7 @@
 
 import streamlit as st
 import random
+from time import sleep
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
 st.title("Boter Kaas en AIeren")
@@ -113,12 +114,14 @@ def random_player_make_move():
     list_pos_moves = [i for i, char in enumerate(st.session_state.board) if char == "_"]
     random_move_index = random.choice(list_pos_moves)
     # pick random index out of list
+    # laat 0.1 s wachten
+    sleep(0.1)
     make_move(random_move_index)
-    pass
 
 
 def AI_make_move():
     if not st.session_state.winner and st.session_state.current_player == "O":
+        sleep(0.5)
         # Look into what board there is.
         if not st.session_state.board in st.session_state.history:
             init_pearls()
@@ -156,6 +159,8 @@ def reset_game():
     st.session_state.winner = None
     st.session_state.current_game = {}
     st.session_state.AI_moves = []
+    if st.session_state.random_player:
+        random_player_make_move()
 
 def reset_history():
     st.session_state.history = {}
