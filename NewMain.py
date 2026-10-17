@@ -67,16 +67,17 @@ def update_pearls(score):
         if board in boards_2_update:
             board_tot_moves = board.count("X") + board.count("O")
             # 0 -> x, 1-> 0, 2-> x, 3 -> 1,
-            index_for_AImoves = (board_tot_moves - 1) / 2
+            index_for_AImoves = (board_tot_moves - 1) // 2
             AImove = st.session_state.AI_moves[index_for_AImoves]
-            st.session_state.current_game[board][AImove] += score
+            new_value = st.session_state.current_game[board][AImove] + score
+            st.session_state.current_game[board][AImove] = max(0, new_value)
 
     # update de juiste zetten van de juiste borden met + of - een getal
     # clear the huidige zetten -> reset game
     # clear de  huidige borden -> reset game
     # Voeg huidig toe aan history / pas aan -> is hetzelfde voor al aanwezig of niet
     st.session_state.history.update(st.session_state.current_game)
-    pass
+    reset_game()
 
 
 
@@ -106,6 +107,11 @@ def make_move(idx):
             st.session_state.current_player = "O"
             AI_make_move()
 
+def random_player_make_move():
+    # get indexis of "_"
+    # pick random index out of list
+    # make_move(random_index)
+    pass
 
 
 def AI_make_move():
@@ -155,15 +161,13 @@ def reset_history():
 if st.session_state.winner:
     if st.session_state.winner == "Tie":
         st.info("🤝 It's a draw!")
-        # + 1 for all moves by AI in this round -> RUN UPDATE PEARLS
         update_pearls(1)
     else: # Check of speler of AI heeft gewonnen ->
         st.success(f"🎉 Player **{st.session_state.winner}** wins!")
-        # AI wint
-            # +3 als AI wint
-        # Speler wint
-            # -1 als speler wint
-    # Update de kralen
+        if st.session_state.winner == "O":
+            update_pearls(3)
+        else:
+            update_pearls(-1)
 else:
     st.write(f"Current Turn: **Player {st.session_state.current_player}**")
 
@@ -187,3 +191,4 @@ for row in range(3):
 
 # 5. Controls
 st.button("Restart Game", on_click=reset_game, type="primary")
+st.button("Herstart geschiedenis", on_click=reset_history, type="primary")
