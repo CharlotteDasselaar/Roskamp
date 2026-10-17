@@ -1,8 +1,6 @@
-from random import randint
 
 import streamlit as st
 import random
-from torch.fx.passes.infra.pass_manager import pass_result_wrapper
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
 st.title("Boter Kaas en AIeren")
