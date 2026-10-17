@@ -20,6 +20,8 @@ if "current_game" not in st.session_state:
     st.session_state.current_game = {} # Dict
 if "AI_moves" not in st.session_state:
     st.session_state.AI_moves = []
+if "random_player" not in st.session_state:
+    st.session_state.random_player = False
 
 
 # Optional CSS to make the buttons appear large and square
@@ -185,10 +187,16 @@ for row in range(3):
             key=f"cell_{idx}",
             on_click=make_move,
             args=(idx,),
-            disabled=bool(cell_value != "_" or st.session_state.winner),
+            disabled=bool(cell_value != "_" or st.session_state.winner or st.session_state.random_player),
             use_container_width=True,
         )
 
 # 5. Controls
 st.button("Restart Game", on_click=reset_game, type="primary")
 st.button("Herstart geschiedenis", on_click=reset_history, type="primary")
+
+# Nog toe te voegen:
+
+# Knop die history laat zien
+# Knop die huidig spel (current game) laat zien dus kralen en non kralen
+# Misschien representatie van kralen op de dias
