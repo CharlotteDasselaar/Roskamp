@@ -203,9 +203,8 @@ def random_player_enable():
         st.session_state.random_player = False
     else:
         st.session_state.random_player = True
-        if st.session_state.board == "_________":
+        if st.session_state.board == "_________" or st.session_state.current_player == "X":
             random_player_make_move()
-    pass
 
 # 5. Controls
 st.button("Restart Game", on_click=reset_game, type="primary")
