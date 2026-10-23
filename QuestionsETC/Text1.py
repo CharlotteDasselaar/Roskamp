@@ -1,0 +1,1 @@
+text1 = "Welkom bij Boter Kaas en AIeren"

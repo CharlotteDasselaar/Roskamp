@@ -1,6 +1,15 @@
 # Hier komen de questions
+# Init some questions correct thing
+# Init page number
+
 
 # Maak functie voor show of question
+def text_for_clarification():
+    # Show explanation
+    # Begrepen, ga door
+        # page_number += 1 if pressed
+    pass
+
 
 def question():
     # Show picture
@@ -18,4 +27,9 @@ def question():
     # Else:
         # Give correct answer
         # Explain why
+        # Have button for diversion question -> if wrong, go back to this question
     pass
+
+def continue_button():
+    pass
+

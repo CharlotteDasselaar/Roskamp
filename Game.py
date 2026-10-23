@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import time
+import pandas as pd
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
 st.title("Boter Kaas en AIeren")
@@ -35,6 +36,50 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+
+def train_simulation(num_games=1000):
+    """Simulates N games in milliseconds to train history."""
+    for _ in range(num_games):
+        b = "_" * 9
+        ai_game_states = {}  # board: chosen_move
+        winner = None
+
+        while not winner:
+            # Player X (Random)
+            empty_x = [i for i, c in enumerate(b) if c == "_"]
+            b = b[:empty_x[0]] + "X" + b[empty_x[0] + 1:] if len(empty_x) == 1 else (
+                lambda idx: b[:idx] + "X" + b[idx + 1:]
+            )(random.choice(empty_x))
+
+            winner = check_winner(b)
+            if winner:
+                break
+
+            # Player O (MENACE AI)
+            if b not in st.session_state.history:
+                # Dynamic starting beads: more beads early, fewer beads late
+                remaining_empty = b.count("_")
+                init_val = max(1, remaining_empty // 2)
+                st.session_state.history[b] = [init_val if c == "_" else 0 for c in b]
+
+            pearls = st.session_state.history[b]
+            legal = [i for i, c in enumerate(b) if c == "_"]
+
+            if sum(pearls) == 0:
+                move = random.choice(legal)
+            else:
+                move = random.choices(range(9), weights=pearls, k=1)[0]
+
+            ai_game_states[b] = move
+            b = b[:move] + "O" + b[move + 1:]
+            winner = check_winner(b)
+
+        # Distribute rewards
+        reward = 3 if winner == "O" else (1 if winner == "Tie" else -1)
+        for board_state, move_taken in ai_game_states.items():
+            current_pearls = st.session_state.history[board_state]
+            current_pearls[move_taken] = max(0, current_pearls[move_taken] + reward)
 
 
 def change_board(char, idx):
@@ -151,7 +196,7 @@ else:
 
 # 4. Render 3x3 Board
 for row in range(3):
-    cols = st.columns(3)
+    cols = st.columns(3, width = 90 * 3)
     for col in range(3):
         idx = row * 3 + col
         cell_value = st.session_state.board[idx]
@@ -172,7 +217,7 @@ for row in range(3):
 # 5. Controls
 col_btn1, col_btn2, col_btn3 = st.columns(3)
 col_btn1.button("Restart Game", on_click=reset_game, type="primary")
-col_btn2.button("Herstart geschiedenis", on_click=reset_history)
+col_btn2.button("Herstart geschiedenis", on_click=reset_history, type= "primary")
 col_btn3.button(
     "Stop Auto Speler" if st.session_state.random_player else "Start Auto Speler",
     on_click=toggle_random_player,
@@ -192,20 +237,34 @@ if st.session_state.winner:
 
     # 2. If auto-player is on, pause briefly to let user see final board, then loop
     if st.session_state.random_player:
-        time.sleep(1.0)
+        time.sleep(0.15)
         reset_game()
         st.rerun()
 
 elif st.session_state.current_player == "O":
     # AI's turn
-    time.sleep(0.3)
+    time.sleep(0.001)
     execute_ai_move()
     st.rerun()
 
 elif st.session_state.current_player == "X" and st.session_state.random_player:
     # Random bot's turn
-    time.sleep(0.3)
+    time.sleep(0.001)
     empty_indices = [i for i, c in enumerate(st.session_state.board) if c == "_"]
     if empty_indices:
         execute_player_move(random.choice(empty_indices))
         st.rerun()
+
+if st.button("⚡ Fast Train 2,000 Games"):
+    with st.spinner("Training 2,000 games in memory..."):
+        train_simulation(2000)
+    st.success("Trained 2,000 games! Test against the AI now.")
+
+st.write(
+    pd.DataFrame(
+        {
+            "Borden (of standen)": st.session_state.history.keys(),
+            "Kralen voor borden": st.session_state.history.values()
+        }
+    )
+)
