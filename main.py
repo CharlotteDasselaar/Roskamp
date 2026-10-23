@@ -1,6 +1,7 @@
 import streamlit as st
 #from questions import QUESTIONS_BANK
-import Game
+from Game import game_render
+from Questions import QUESTIONS_BANK
 
 # 1. State initialisatie voor de quiz
 if "current_question_idx" not in st.session_state:
@@ -15,9 +16,9 @@ col_game, col_quiz = st.columns([3, 2], gap="large")
 
 with col_game:
     st.subheader("🎮 Boter Kaas en AIeren")
-    st.run(Game)
+    game_render()
+
     # Hier komt je bestaande 3x3 bord-rendering...
-"""
 with col_quiz:
     st.subheader("💡 Kennistest")
 
@@ -63,5 +64,3 @@ with col_quiz:
             st.session_state.quiz_score = 0
             st.session_state.answered = False
             st.rerun()
-            
-"""

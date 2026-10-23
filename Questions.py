@@ -2,34 +2,34 @@
 # Init some questions correct thing
 # Init page number
 
+from dataclasses import dataclass
+from typing import List, Optional
 
-# Maak functie voor show of question
-def text_for_clarification():
-    # Show explanation
-    # Begrepen, ga door
-        # page_number += 1 if pressed
-    pass
+@dataclass
+class Question:
+    id: int
+    prompt: str
+    options: List[str]
+    correct_idx: int
+    explanation: Optional[str] = None
+
+    def is_correct(self, selected_idx: int) -> bool:
+        return selected_idx == self.correct_idx
 
 
-def question():
-    # Show picture
-    # Show question
-    # Create hint button
-        # Show hint when pressed
-    # Show multiple choice
-        # One answer correct
-    # essay question
-        # yes or no bij zelf nakijken.
-    # If answer correct
-        # Show "Correct"
-        # Keep in list of questions correct so we can go back to this question.
-        # Go to next question
-    # Else:
-        # Give correct answer
-        # Explain why
-        # Have button for diversion question -> if wrong, go back to this question
-    pass
-
-def continue_button():
-    pass
-
+QUESTIONS_BANK = [
+    Question(
+        id=1,
+        prompt="Waarmee traint het MENACE-algoritme?",
+        options=["Neurale netwerken", "Kralen/luciferdoosjes", "Backpropagation"],
+        correct_idx=1,
+        explanation="Donald Michie gebruikte in 1961 luciferdoosjes gevuld met gekleurde kralen."
+    ),
+    Question(
+        id=2,
+        prompt="Wat gebeurt er als de AI verliest?",
+        options=["Hij krijgt een extra kraal", "Er wordt een kraal weggehaald", "Niets"],
+        correct_idx=1,
+        explanation="Als straf voor de verloren zet verliest het doosje de gespeelde kraal."
+    ),
+]
