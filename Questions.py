@@ -12,12 +12,14 @@ class Question:
     options: List[str]
     correct_idx: int
     explanation: Optional[str] = None
+    hint: str = None
 
     def is_correct(self, selected_idx: int) -> bool:
         return selected_idx == self.correct_idx
 
 
 QUESTIONS_BANK = [
+
     Question(
         id=1,
         prompt="Waarmee traint het MENACE-algoritme?",

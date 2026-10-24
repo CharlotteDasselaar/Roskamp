@@ -4,13 +4,19 @@ from Game import game_render
 from Questions import QUESTIONS_BANK
 
 # 1. State initialisatie voor de quiz
-if "current_question_idx" not in st.session_state:
-    st.session_state.current_question_idx = 0
-if "quiz_score" not in st.session_state:
-    st.session_state.quiz_score = 0
-if "answered" not in st.session_state:
-    st.session_state.answered = False
+def init_quiz():
+    if "current_question_idx" not in st.session_state:
+        st.session_state.current_question_idx = 0
+    if "quiz_score" not in st.session_state:
+        st.session_state.quiz_score = 0
+    if "answered" not in st.session_state:
+        st.session_state.answered = False
 
+def reset_quiz():
+    st.session_state.current_question_idx = 0
+    st.session_state.quiz_score = 0
+    st.session_state.answered = False
+init_quiz()
 # 2. Layout verdelen (Spel links, Vragen rechts)
 col_game, col_quiz = st.columns([3, 2], gap="large")
 
@@ -18,7 +24,7 @@ with col_game:
     st.subheader("🎮 Boter Kaas en AIeren")
     game_render()
 
-    # Hier komt je bestaande 3x3 bord-rendering...
+# Hier komt je bestaande 3x3 bord-rendering...
 with col_quiz:
     st.subheader("💡 Kennistest")
 
@@ -37,30 +43,42 @@ with col_quiz:
             disabled=st.session_state.answered
         )
 
+        # 1. Zorg dat last_correct geïnitialiseerd is bij je session_state
+        if "last_correct" not in st.session_state:
+            st.session_state.last_correct = None
+
+        # 2. Vraag-afhandeling
         if not st.session_state.answered:
             if st.button("Controleren", key=f"btn_{q.id}"):
                 selected_idx = q.options.index(user_choice)
-                if q.is_correct(selected_idx):
-                    st.success("Correct!")
-                    st.session_state.quiz_score += 1
-                else:
-                    st.error("Helaas, onjuist.")
+                is_correct = q.is_correct(selected_idx)
 
-                if q.explanation:
-                    st.info(q.explanation)
+                # Sla resultaat op in state
+                st.session_state.last_correct = is_correct
+                if is_correct:
+                    st.session_state.quiz_score += 1
 
                 st.session_state.answered = True
                 st.rerun()
+
         else:
+            # Toon HIER de feedback, zodat deze zichtbaar blijft
+            if st.session_state.last_correct:
+                st.success("🎉 Correct!")
+            else:
+                st.error("❌ Helaas, onjuist.")
+
+            if q.explanation:
+                st.info(q.explanation)
+
             if st.button("Volgende vraag ➡️"):
                 st.session_state.current_question_idx += 1
                 st.session_state.answered = False
+                st.session_state.last_correct = None
                 st.rerun()
     else:
-        st.success(
-            f"Gefeliciteerd! Je hebt alle vragen afgerond. Score: {st.session_state.quiz_score}/{len(QUESTIONS_BANK)}")
-        if st.button("Herstart Quiz"):
-            st.session_state.current_question_idx = 0
-            st.session_state.quiz_score = 0
-            st.session_state.answered = False
+        st.write(f"Je bent klaar met de quiz.\nSpeel vooral nog met je goede AI systeem!")
+        if st.button("Terug naar start"):
+            reset_quiz()
             st.rerun()
+
