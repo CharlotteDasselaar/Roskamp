@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-list_ntrain = [500000,100 , 5000, 7000, 10000] # Vanaf wanneer is het te winnen voor de random speler en wanneer voor de speler himself?
+list_ntrain = [1000,2000 ,5000, 7000, 10000] # Vanaf wanneer is het te winnen voor de random speler en wanneer voor de speler himself?
 
 @dataclass
 class Question:

@@ -50,31 +50,28 @@ def init_game_state():
     )
 
 
-
 def train_simulation(num_games=1000):
-    """Simulates N games in milliseconds to train history."""
+    """Simulates N games in memory to train history."""
     for _ in range(num_games):
         b = "_" * 9
-        ai_game_states = {}  # board: chosen_move
+        ai_moves_in_order = []  # Lijst behoudt volgorde van zetten
         winner = None
 
         while not winner:
             # Player X (Random)
             empty_x = [i for i, c in enumerate(b) if c == "_"]
-            b = b[:empty_x[0]] + "X" + b[empty_x[0] + 1:] if len(empty_x) == 1 else (
-                lambda idx: b[:idx] + "X" + b[idx + 1:]
-            )(random.choice(empty_x))
+            if not empty_x:
+                break
+            move_x = random.choice(empty_x)
+            b = b[:move_x] + "X" + b[move_x + 1:]
 
             winner = check_winner(b)
             if winner:
                 break
 
-            # Player O (MENACE AI)
+            # Player O (AI)
             if b not in st.session_state.history:
-                # Dynamic starting beads: more beads early, fewer beads late
-                remaining_empty = b.count("_")
-                init_val = max(1, remaining_empty // 2)
-                st.session_state.history[b] = [init_val if c == "_" else 0 for c in b]
+                st.session_state.history[b] = [3 if c == "_" else 0 for c in b]
 
             pearls = st.session_state.history[b]
             legal = [i for i, c in enumerate(b) if c == "_"]
@@ -84,16 +81,20 @@ def train_simulation(num_games=1000):
             else:
                 move = random.choices(range(9), weights=pearls, k=1)[0]
 
-            ai_game_states[b] = move
+            ai_moves_in_order.append((b, move))
             b = b[:move] + "O" + b[move + 1:]
             winner = check_winner(b)
 
-        # Distribute rewards
-        reward = 3 if winner == "O" else (1 if winner == "Tie" else -1)
-        for board_state, move_taken in ai_game_states.items():
-            current_pearls = st.session_state.history[board_state]
-            current_pearls[move_taken] = max(0, current_pearls[move_taken] + reward)
+        # Basisbeloning
+        base_reward = 3 if winner == "O" else (1 if winner == "Tie" else -1)
 
+        # Pas beloning toe met gewichten voor vroege vs. late zetten
+        for turn_idx, (board_state, move_taken) in enumerate(ai_moves_in_order):
+            multiplier = min(3, turn_idx + 1)
+            delta = base_reward * multiplier
+
+            current_pearls = st.session_state.history[board_state]
+            current_pearls[move_taken] = max(0, current_pearls[move_taken] + delta)
 
 def change_board(char, idx):
     st.session_state.board = (
