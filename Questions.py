@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+list_ntrain = [500000,100 , 5000, 7000, 10000] # Vanaf wanneer is het te winnen voor de random speler en wanneer voor de speler himself?
 
 @dataclass
 class Question:
@@ -48,7 +49,7 @@ QUESTIONS_BANK = [
     Question(
         id=2,
         prompt=(
-            "Zoals je ziet maakt de AI snel zijn volgende zet. Je kunt hierna weer zetten zoals daarnet. "
+            "Zoals je ziet maakt de AI snel zijn volgende zet. Je kunt hierna weer een zet zetten, zoals je daarnet hebt gedaan. "
             "Speel zo eens een potje uit. Is het mogelijk om van de AI te winnen?"
         ),
         options=[
@@ -71,7 +72,7 @@ QUESTIONS_BANK = [
         ],
         correct_idx=3,
         explanation=(
-            "Als je dacht dat de AI slecht in elkaar zat, heb je wel weinig vertrouwen in de maker! "
+            "Als je dacht dat de AI slecht in elkaar zat, dan heb je wel heel weinig vertrouwen in de maker! "
             "Het probleem is simpelweg dat de AI nog niet getraind is; na het trainen zou hij goed moeten spelen."
         )
     ),
@@ -195,11 +196,11 @@ QUESTIONS_BANK = [
         id=10,
         prompt=(
             "We beginnen deze AI steeds beter te snappen! Als beloning mag je op de 'Snel trainen'-knop drukken. "
-            "Hierdoor speelt de AI supersnel 1000 wedstrijdjes tegen een willekeurige speler. "
+            f"Hierdoor speelt de AI supersnel {list_ntrain[0]} wedstrijdjes tegen een willekeurige speler. "
             "Hoe vaker je traint, hoe beter de AI wordt!"
         ),
-        enable_autotrain=1000,
-        options=["Wat leuk! Start de 1000 potjes."],
+        enable_autotrain= list_ntrain[0],
+        options=[f"Wat leuk! Start de {list_ntrain[0]} potjes."],
         correct_idx=0,
         explanation="De simulatie draait op de achtergrond en past direct alle kralen aan!"
     ),
@@ -236,11 +237,11 @@ QUESTIONS_BANK = [
     Question(
         id=13,
         prompt=(
-            "Tijd voor een upgrade! Druk op de snel-train-knop om de AI nog eens 2000 wedstrijdjes "
+            f"Tijd voor een upgrade! Druk op de snel-train-knop om de AI nog eens {list_ntrain[1]} wedstrijdjes "
             "te laten spelen tegen de willekeurige speler."
         ),
-        enable_autotrain=2000,
-        options=["Top, train 2000 potjes!"],
+        enable_autotrain= list_ntrain[1],
+        options=[f"Top, train {list_ntrain[1]} potjes!"],
         correct_idx=0,
         explanation="De AI leert nu razendsnel patronen herkennen van duizenden wedstrijden tegelijk."
     ),
@@ -294,11 +295,11 @@ QUESTIONS_BANK = [
     ),
     Question(
         id=17,
-        prompt="Laten we de AI weer een trainingsboost geven. Druk op de snel-train-knop voor 3500 potjes!",
-        enable_autotrain=3500,
-        options=["Simuleer 3500 potjes!"],
+        prompt=f"Laten we de AI weer een trainingsboost geven. Druk op de snel-train-knop voor {list_ntrain[2]} potjes!",
+        enable_autotrain= list_ntrain[2],
+        options=[f"Simuleer {list_ntrain[2]} potjes!"],
         correct_idx=0,
-        explanation="3500 potjes worden in een fractie van een seconde doorgerekend."
+        explanation=f"{list_ntrain[2]} potjes worden in een fractie van een seconde doorgerekend."
     ),
     Question(
         id=18,
@@ -333,9 +334,9 @@ QUESTIONS_BANK = [
     ),
     Question(
         id=21,
-        prompt="Tijd om nog een extra ronde van 3500 wedstrijdjes te trainen!",
-        enable_autotrain=3500,
-        options=["Train nog 3500 potjes!"],
+        prompt=f"Tijd om nog een extra ronde van {list_ntrain[3]} wedstrijdjes te trainen!",
+        enable_autotrain=list_ntrain[3],
+        options=[f"Train nog {list_ntrain[3]} potjes!"],
         correct_idx=0,
         explanation="De AI verfijnt nu ook de zeldzamere spelsituaties."
     ),
@@ -392,9 +393,9 @@ QUESTIONS_BANK = [
     ),
     Question(
         id=25,
-        prompt="We geven de AI nu een enorme boost van 5000 potjes tegelijk!",
-        enable_autotrain=5000,
-        options=["Train 5000 potjes!"],
+        prompt=f"We geven de AI nu een enorme boost van {list_ntrain[4]} potjes tegelijk!",
+        enable_autotrain=list_ntrain[4],
+        options=[f"Train {list_ntrain[4]} potjes!"],
         correct_idx=0,
         explanation="Met in totaal meer dan tienduizend trainingspotjes is vrijwel elk bord minimaal één keer gezien."
     ),

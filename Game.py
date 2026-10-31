@@ -101,7 +101,7 @@ def change_board(char, idx):
     )
 
 
-def init_pearls(start_pearl_amount=3):
+def init_pearls(start_pearl_amount=10):
     st.session_state.current_game[st.session_state.board] = [
         start_pearl_amount if cell == "_" else 0
         for cell in st.session_state.board
@@ -120,8 +120,13 @@ def update_pearls(score):
             index_for_AImoves = (board_tot_moves - 1) // 2
             if index_for_AImoves < len(st.session_state.AI_moves):
                 AImove = st.session_state.AI_moves[index_for_AImoves]
-                new_value = st.session_state.current_game[b][AImove] + score
+                multiplier = min(3, index_for_AImoves + 1)
+                new_value = st.session_state.current_game[b][AImove] + (score * multiplier)
+                if new_value <= 0:
+                    new_value = random.choice([0,0,0,0,1])
                 st.session_state.current_game[b][AImove] = max(0, new_value)
+
+
 
     st.session_state.history.update(st.session_state.current_game)
 

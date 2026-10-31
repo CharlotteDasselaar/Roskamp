@@ -1,6 +1,7 @@
 import streamlit as st
 #from questions import QUESTIONS_BANK
 from Game import game_render
+from Game import train_simulation
 from Questions import QUESTIONS_BANK
 
 # 1. State initialisatie voor de quiz
@@ -18,7 +19,7 @@ def reset_quiz():
     st.session_state.answered = False
 init_quiz()
 # 2. Layout verdelen (Spel links, Vragen rechts)
-col_game, col_quiz = st.columns([3, 2], gap="large")
+col_game, col_quiz = st.columns([5, 4], gap="xsmall")
 
 with col_game:
     st.subheader("🎮 Boter Kaas en AIeren")
@@ -58,6 +59,10 @@ with col_quiz:
                 if is_correct:
                     st.session_state.quiz_score += 1
 
+                if q.enable_autotrain:
+                    train_simulation(q.enable_autotrain)
+                    st.info("De AI wordt nu getrained!")
+
                 st.session_state.answered = True
                 st.rerun()
 
@@ -66,7 +71,7 @@ with col_quiz:
             if st.session_state.last_correct:
                 st.success("🎉 Correct!")
             else:
-                st.error("❌ Helaas, onjuist.")
+                st.error("❌ Dit is niet het antwoord wat we zochten.")
 
             if q.explanation:
                 st.info(q.explanation)
