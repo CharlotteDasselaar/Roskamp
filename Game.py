@@ -103,7 +103,7 @@ def change_board(char, idx):
     )
 
 
-def init_pearls(start_pearl_amount=10):
+def init_pearls(start_pearl_amount=3):
     st.session_state.current_game[st.session_state.board] = [
         start_pearl_amount if cell == "_" else 0
         for cell in st.session_state.board
