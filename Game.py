@@ -129,7 +129,6 @@ def update_pearls(score):
                 st.session_state.current_game[b][AImove] = max(0, new_value)
 
 
-
     st.session_state.history.update(st.session_state.current_game)
 
 
@@ -139,7 +138,7 @@ def reset_game():
     st.session_state.winner = None
     st.session_state.current_game = {}
     st.session_state.AI_moves = []
-    st.session_state.games_scored = False
+    st.session_state.game_scored = False
 
 
 def reset_history():
@@ -247,10 +246,31 @@ def game_render():
         type="secondary" if st.session_state.random_player else "primary",
     )
 
-    if st.button(f"⚡ Fast Train \n{st.session_state.n_auto_games} Games"):
-        with st.spinner(f"Training {st.session_state.n_auto_games} games in memory..."):
-            train_simulation(st.session_state.n_auto_games)
-        st.success(f"Trained {st.session_state.n_auto_games} games! Test against the AI now.")
+
+    #if st.button(f"⚡ Fast Train \n{st.session_state.n_auto_games} Games"):
+    #    with st.spinner(f"Training {st.session_state.n_auto_games} games in memory..."):
+    #        train_simulation(st.session_state.n_auto_games)
+    #    st.success(f"Trained {st.session_state.n_auto_games} games! Test against the AI now.")
+
+    if st.session_state.get("current_question_idx", 0) >= 4:
+        st.write("---")
+        show_history = st.toggle("📊 Toon onderliggende data (geschiedenis)", value=False)
+
+        if show_history:
+            if not st.session_state.history:
+                st.info("De geschiedenis is nog leeg. Speel eerst een potje om data te verzamelen!")
+            else:
+                df_history = pd.DataFrame(
+                    [
+                        {
+                            "Bord (situatie)": board,
+                            "Kralen per vakje (A1 t/m C3)": str(pearls)
+                        }
+                        for board, pearls in st.session_state.history.items()
+                    ]
+                )
+                st.caption(f"Aantal ontdekte situaties: **{len(df_history)}**")
+                st.dataframe(df_history, use_container_width=True, height=280)
 
     # 6. Afhandeling van beurten en einde van het spel
     if st.session_state.winner:
