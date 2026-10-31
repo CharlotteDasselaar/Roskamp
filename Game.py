@@ -28,28 +28,61 @@ def init_game_state():
     if "game_scored" not in st.session_state:
         st.session_state.game_scored = False
 
-    # Custom CSS for large buttons
+# Speelbord blijft vierkant met grote symbolen; knoppen eronder worden nette 2-regelige balkjes
     st.markdown(
         """
         <style>
-        div[data-testid="stButton"] > button {
-            width: 100%;
-            
-            
-            aspect-ratio: 1 / 1;
+        /* Speelbord: pakt alle 9 knoppen met key 'cell_0' t/m 'cell_8' */
+        div[class*="st-key-cell_"] button {
+            width: 100% !important;
+            aspect-ratio: 1 / 1 !important;
             height: auto !important;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: bold;
+            min-height: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 2.5rem !important;
+            font-weight: bold !important;
         }
+
+        /* Bedieningsknoppen: hoogte en padding */
+        .st-key-control_container div[data-testid="stButton"] > button {
+            width: 100%;
+            aspect-ratio: auto !important;
+            min-height: 60px !important;
+            height: auto !important;
+            padding: 4px 6px !important;
+        }
+
+        /* Tekst in bedieningsknoppen: dwingt 2 regels af via \n */
+        .st-key-control_container div[data-testid="stButton"] > button p {
+            font-size: 0.85rem !important;
+            line-height: 1.25 !important;
+            white-space: pre-line !important;
+            text-align: center !important;
+            word-break: break-word !important;
+            font-weight: 600;
+        }
+        /* Zorgt dat de toggle-tekst en al zijn containers netjes meebewegen */
+        div[data-testid="stToggle"] label {
+            align-items: center !important;
+        }
+
+        div[data-testid="stToggle"] [data-testid="stWidgetLabel"],
+        div[data-testid="stToggle"] [data-testid="stWidgetLabel"] * {
+            white-space: pre-line !important;
+            overflow: visible !important;
+            text-overflow: unset !important;
+            word-break: normal !important;
+            line-height: 1.25 !important;
+            font-size: 0.88rem !important;
+        }
+        
         </style>
         """,
         unsafe_allow_html=True,
     )
-
 
 def train_simulation(num_games=1000):
     """Simulates N games in memory to train history."""
@@ -209,6 +242,7 @@ def game_render():
 
     init_game_state()
 
+    # 1. Alleen de tekstmelding is afhankelijk van winst of beurt
     if st.session_state.winner:
         if st.session_state.winner == "Tie":
             st.info("🤝 It's a draw!")
@@ -217,54 +251,58 @@ def game_render():
     else:
         st.write(f"Current Turn: **Player {st.session_state.current_player}**")
 
-    # 4. Render 3x3 Board
-    for row in range(3):
-        cols = st.columns(3, width=90 * 3)
-        for col in range(3):
-            idx = row * 3 + col
-            cell_value = st.session_state.board[idx]
-            cols[col].button(
-                label=cell_value if cell_value != "_" else " ",
-                key=f"cell_{idx}",
-                on_click=execute_player_move,
-                args=(idx,),
-                disabled=bool(
-                    cell_value != "_"
-                    or st.session_state.winner
-                    or st.session_state.random_player
-                ),
-                use_container_width=True,
-            )
+    # 2. Speelbord staat nu BUITEN het if/else blok en blijft dus ALTIJD in beeld
+    with st.container():
+        for row in range(3):
+            cols = st.columns(3)
+            for col in range(3):
+                idx = row * 3 + col
+                cell_value = st.session_state.board[idx]
+                cols[col].button(
+                    label=cell_value if cell_value != "_" else " ",
+                    key=f"cell_{idx}",
+                    on_click=execute_player_move,
+                    args=(idx,),
+                    disabled=bool(
+                        cell_value != "_"
+                        or st.session_state.winner
+                        or st.session_state.random_player
+                    ),
+                    use_container_width=True,
+                )
 
-    # 5. Controls
-    col_btn1, col_btn2, col_btn3 = st.columns(3)
-    col_btn1.button("Herstart Spel", on_click=reset_game, type="primary")
-    col_btn2.button("Herstart geschiedenis", on_click=reset_history, type="primary", width = 80)
-    col_btn3.button(
-        "Stop Auto Speler" if st.session_state.random_player else "Start Auto Speler",
-        on_click=toggle_random_player,
-        type="secondary" if st.session_state.random_player else "primary",
-    )
+    st.write("")  # Witregel tussen bord en knoppen
 
+    # 3. Controls staan nu ook ALTIJD in beeld
+    with st.container(key="control_container"):
+        col_btn1, col_btn2 = st.columns(2)
+        col_btn1.button(
+            "Herstart \nSpel",
+            on_click=reset_game,
+            type="primary",
+            use_container_width=True,
+        )
+        col_btn2.button(
+            "Stop Random \nSpeler" if st.session_state.random_player else "Start Random \nSpeler",
+            on_click=toggle_random_player,
+            type="secondary" if st.session_state.random_player else "primary",
+            use_container_width=True,
+        )
 
-    #if st.button(f"⚡ Fast Train \n{st.session_state.n_auto_games} Games"):
-    #    with st.spinner(f"Training {st.session_state.n_auto_games} games in memory..."):
-    #        train_simulation(st.session_state.n_auto_games)
-    #    st.success(f"Trained {st.session_state.n_auto_games} games! Test against the AI now.")
-
+    # 4. Geschiedenis toggle (ontgrendeld vanaf vraag 5)
     if st.session_state.get("current_question_idx", 0) >= 4:
         st.write("---")
-        show_history = st.toggle("📊 Toon onderliggende data (geschiedenis)", value=False)
+        show_history = st.toggle("📊 Toon onderliggende geschiedenis", value=False)
 
         if show_history:
             if not st.session_state.history:
-                st.info("De geschiedenis is nog leeg. Speel eerst een potje om data te verzamelen!")
+                st.info("De eerdere potjes zijn voor nu gewist.\nSpeel een potje om weer data te verzamelen!")
             else:
                 df_history = pd.DataFrame(
                     [
                         {
                             "Bord (situatie)": board,
-                            "Kralen per vakje (A1 t/m C3)": str(pearls)
+                            "Kralen per vakje (A1 t/m C3)": str(pearls),
                         }
                         for board, pearls in st.session_state.history.items()
                     ]
@@ -272,7 +310,7 @@ def game_render():
                 st.caption(f"Aantal ontdekte situaties: **{len(df_history)}**")
                 st.dataframe(df_history, use_container_width=True, height=280)
 
-    # 6. Afhandeling van beurten en einde van het spel
+    # 5. Afhandeling van beurten en einde van het spel
     if st.session_state.winner:
         if not st.session_state.game_scored:
             if st.session_state.winner == "O":
@@ -283,34 +321,24 @@ def game_render():
                 update_pearls(-1)
             st.session_state.game_scored = True
 
-        # Stap 2: Automatisch nieuw potje starten
         if st.session_state.random_player:
             time.sleep(0.2)
             reset_game()
             st.rerun()
         else:
-            # Menselijke speler: geef 1.5 seconde om de uitslag te zien, daarna schone start
             st.caption("Nieuw potje start automatisch over 0.8 seconde...")
-            #if st.button("Direct volgend potje ➡️"):
-            #    reset_game()
-            #    st.rerun()
             time.sleep(0.8)
             reset_game()
             st.rerun()
 
     elif st.session_state.current_player == "O":
-        # AI is aan de beurt
         time.sleep(0.15)
         execute_ai_move()
         st.rerun()
 
     elif st.session_state.current_player == "X" and st.session_state.random_player:
-        # Automatische tegenspeler is aan de beurt
         time.sleep(0.15)
         empty_indices = [i for i, c in enumerate(st.session_state.board) if c == "_"]
         if empty_indices:
             execute_player_move(random.choice(empty_indices))
             st.rerun()
-
-    # Als current_player == "X" en random_player == False:
-    # Doe NIETS! Het script stopt hier en wacht netjes tot de mens een vakje aanklikt.

@@ -72,10 +72,10 @@ QUESTIONS_BANK = [
         id=3,
         prompt="Het is dus heel makkelijk om van de AI te winnen. Wat betekent dat denk je?",
         options=[
-            "De AI is verkeerd in elkaar gezet, maar wel al getraind.",
-            "De AI is goed in elkaar gezet en al getraind.",
-            "De AI is verkeerd in elkaar gezet en niet getraind.",
-            "De AI is goed in elkaar gezet, maar nog niet getraind."
+            "De AI is al getrained, maar de computer weet nog niet wat winnen is.",
+            "De AI is al getrained en de computer weet ook al wat winnen is.",
+            "De AI is nog niet getrained en de computer weet ook nog niet wat winnen is.",
+            "De AI is nog niet getraind, maar de computer weet wel al wat winnen is."
         ],
         correct_idx=3,
         explanation=(
@@ -119,7 +119,6 @@ QUESTIONS_BANK = [
         options=[
             "De geschiedenislijst wordt steeds langer en de cijfers in de tweede kolom veranderen nooit.",
             "De geschiedenislijst wordt steeds langer en de cijfers in de tweede kolom kunnen na wat wedstrijdjes veranderen.",
-            "De geschiedenislijst wordt steeds korter en de cijfers in de tweede kolom veranderen nooit.",
             "De geschiedenislijst wordt steeds korter en de cijfers in de tweede kolom veranderen nooit meer.",
             "De geschiedenislijst wordt steeds korter en de cijfers in de tweede kolom kunnen na wat wedstrijdjes veranderen."
         ],
@@ -203,7 +202,7 @@ QUESTIONS_BANK = [
 Question(
         id=10,
         prompt=(
-            "Voordat we gaan trainen, doen we eerst een nulmeting! Druk op de knop 'Start Auto Speler'. "
+            "Voordat we gaan trainen, doen we eerst een nulmeting! Druk op de knop 'Start Random Speler'. "
             "De computer speelt nu als willekeurige speler (X) tegen jouw nog ongetrainde AI (O). "
             "Laat ze even 5 tot 10 potjes tegen elkaar spelen (en zet hem daarna weer op Stop). "
             "Wat valt je op aan de resultaten van de AI?"

@@ -29,7 +29,7 @@ def reset_quiz():
 init_quiz()
 
 # 2. Layout verdelen (Spel links, Vragen rechts)
-col_game, col_quiz = st.columns([5, 4], gap="small")
+col_game, col_quiz = st.columns([4, 5], gap="large")
 
 with col_game:
     st.subheader("🎮 Boter Kaas en AIeren")
@@ -111,7 +111,7 @@ with col_quiz:
                     if q.explanation:
                         st.caption(q.explanation)
 
-                    if st.button("Volgende vraag ➡️", key=f"next_{q.id}"):
+                    if st.button("Volgende vraag \n➡️", key=f"next_{q.id}"):
                         st.session_state.current_question_idx += 1
                         st.session_state.answered = False
                         st.session_state.text_submitted = False
@@ -152,7 +152,7 @@ with col_quiz:
                 if q.explanation:
                     st.info(q.explanation)
 
-                if st.button("Volgende vraag ➡️", key=f"next_{q.id}"):
+                if st.button("Volgende vraag \n➡️", key=f"next_{q.id}"):
                     st.session_state.current_question_idx += 1
                     st.session_state.answered = False
                     st.session_state.last_correct = None
@@ -160,6 +160,6 @@ with col_quiz:
 
     else:
         st.write("Je bent klaar met de quiz!\nSpeel vooral nog een paar potjes tegen je getrainde AI.")
-        if st.button("Terug naar start"):
+        if st.button("Terug naar \nstart"):
             reset_quiz()
             st.rerun()
