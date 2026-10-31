@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-list_ntrain = [1000, 2000, 5000, 7000]
+list_ntrain = [1000, 3500, 5000, 7000]
 # 0: --> geen verschil duidelijk
 # 1: -->  verschil duidelijk
 # 2: --> maakt geen fouten tegen random speler
@@ -79,8 +79,8 @@ QUESTIONS_BANK = [
         ],
         correct_idx=3,
         explanation=(
-            "Als je dacht dat de AI slecht in elkaar zat, dan heb je wel heel weinig vertrouwen in de maker! "
-            "Het probleem is simpelweg dat de AI nog niet getraind is; na het trainen zou hij goed moeten spelen."
+            "Het probleem is simpelweg dat de AI nog niet getraind is;" 
+            "na het trainen zou hij goed moeten spelen! De computer \"weet\" ook al wanneer hij gewonnen heeft."
         )
     ),
     Question(
@@ -214,8 +214,8 @@ Question(
         ],
         correct_idx=1,
         explanation=(
-            "Klopt! Omdat jouw AI nog helemaal ongetraind is, gokt hij blind. Omdat de AI als tweede speler (O) "
-            "begint, heeft de beginnende speler (X) bij willekeurige zetten een voordeel (X wint normaal ~58% van de potjes). "
+            "Klopt! Omdat jouw AI nog helemaal ongetraind is, gokt hij blind."
+            "Daarnaast heeft de beginnende speler (X) bij willekeurige zetten een voordeel (X wint normaal ~58% van de potjes). "
             "De AI is op dit moment dus nog een verliezer. Tijd om daar verandering in te brengen!"
         )
     ),
@@ -223,20 +223,20 @@ Question(
     Question(
         id=11,
         prompt=(
-            "We beginnen deze AI steeds beter te snappen! Als beloning mag je op de 'Snel trainen'-knop drukken. "
+            "We beginnen deze AI steeds beter te snappen! Als beloning mag je de AI een kleine voorsprong geven met het trainproces."
             f"Hierdoor speelt de AI supersnel {list_ntrain[0]} wedstrijdjes tegen een willekeurige speler. "
             "Hoe vaker je traint, hoe beter de AI wordt!"
         ),
         enable_autotrain= list_ntrain[0],
         options=[f"Wat leuk! Start de {list_ntrain[0]} potjes."],
         correct_idx=0,
-        explanation="De simulatie draait op de achtergrond en past direct alle kralen aan!"
+        explanation=f"De simulatie heeft op de achtergrond gedraaid en de AI heeft nu {list_ntrain[0]} potjes gezien!"
     ),
 Question(
         id=12,
         prompt=(
-            "Laten we kijken wat die 1000 potjes training hebben opgeleverd! "
-            "Druk op 'Start Auto Speler' en laat ze weer 3 tot 5 potjes tegen elkaar spelen (zet hem daarna weer op Stop). "
+            f"Laten we kijken wat die {list_ntrain[0]} potjes training hebben opgeleverd! "
+            "Druk op 'Start Auto Speler' en laat ze weer ongeveer 10 potjes tegen elkaar spelen (zet hem daarna weer op Stop). "
             "Merk je al een enorm verschil in de uitslagen?"
         ),
         options=[
@@ -246,7 +246,7 @@ Question(
         ],
         correct_idx=1,
         explanation=(
-            "Er is (als het goed is) nog niet heel veel veranderd! 1000 potjes klinkt als heel veel voor een mens, "
+            f"Er is (als het goed is) nog niet heel veel veranderd! {list_ntrain[0]} potjes klinkt als heel veel voor een mens, "
             "maar voor een AI is dit nog maar een warming-up. Omdat er honderden verschillende bordstanden zijn, "
             "heeft de AI veel situaties pas één of twee keer gezien. Hij heeft dus echt nog veel meer data en vlieguren nodig!"
         )
@@ -284,7 +284,7 @@ Question(
     Question(
         id=15,
         prompt=(
-            f"Tijd voor een upgrade! Druk op de snel-train-knop om de AI nog eens {list_ntrain[1]} wedstrijdjes "
+            f"Tijd voor een upgrade! Laat de AI nog eens {list_ntrain[1]} extra wedstrijdjes spelen!"
             "te laten spelen tegen de willekeurige speler."
         ),
         enable_autotrain= list_ntrain[1],
@@ -334,7 +334,7 @@ Question(
     Question(
         id=18,
         prompt=(
-            "In de code zien de kralen er zo uit: 021003241. "
+            "Stel, in de code zien de kralen er zo uit: 021003241. "
             "De volgorde staat voor de vakjes: A1, A2, A3, B1, B2, B3, C1, C2, C3. "
             "Welk vakje heeft nu 4 kralen?"
         ),
@@ -344,7 +344,7 @@ Question(
     ),
     Question(
         id=19,
-        prompt=f"Laten we de AI weer een trainingsboost geven. Druk op de snel-train-knop voor {list_ntrain[2]} potjes!",
+        prompt=f"Laten we de AI weer een trainingsboost geven. We voeren de AI weer {list_ntrain[2]} extra potjes!",
         enable_autotrain= list_ntrain[2],
         options=[f"Simuleer {list_ntrain[2]} potjes!"],
         correct_idx=0,
@@ -355,18 +355,18 @@ Question(
         prompt="Speel weer een potje tegen de AI. Merk je dat hij zijn verdediging beter op orde heeft?",
         options=[
             "Ik win altijd! De random player verliest altijd.",
-            "De AI wordt beter, maar ik kan er nog steeds van winnen. Hij wint (vrijwel) altijd tegen de random speler.",
+            "De AI wordt beter, maar ik kan er nog steeds makkelijk van winnen. Hij wint (vrijwel) altijd tegen de random speler of ze spelen gelijk.",
             "Nee, er is helemaal geen verbetering geweest deze hele tijd."
         ],
         correct_idx=1,
-        explanation="In principe hoort het tweede antwoord het juiste antwoord te zijn. Speel anders nog een paar keer of dit klopt."
+        explanation="In principe hoort het tweede antwoord het juiste antwoord te zijn. Speel anders nog een paar keer of dit klopt. Mocht je vastlopen, vraag om hulp"
     ),
     Question(
         id=21,
         prompt=(
             "Bij de start van de training begint het bord in code als volgt: 3,3,3,3,3,3,3,3,3. "
             "Elk getal staat voor de kralen van één vakje (van A1 t/m C3). "
-            "Stel dat de AI mag beginnen: wat is de kans dat de AI vakje C1 kiest?"
+            "Stel dat dit keer de AI mag beginnen: wat is de kans dat de AI vakje C1 kiest?"
         ),
         options=["3/3", "3/9", "1/3", "1/9"],
         correct_idx=3,
@@ -394,11 +394,12 @@ Question(
         id=24,
         prompt="Test de AI nogmaals uit. Hoe gaat het spel nu?",
         options=[
-            "Ik kan niet winnen van de AI... hij blijft me verslaan",
-            "De AI speelt niet heel veel meer beter dan de vorige keer."
+            "Ik kan niet meer winnen van de AI... hij blijft me verslaan. Dit is ook zo voor de random speler",
+            "De AI speelt wel steeds iets beter met deze training, maar als ik slim speel kan ik hem nogsteeds verslaan",
+            "De AI verbetert niet, ik zie absoluut geen verschil met het begin van het spel. "
         ],
         correct_idx=1,
-        explanation="De AI zou nog verslaanbaar moeten zijn, zelfs na zoveel trainingssessies. Ergens is dat best vervelend, hoe zou dat nu komen?"
+        explanation="De AI zou nog verslaanbaar moeten zijn, zelfs na zoveel trainingssessies. Als je geen verbetering ziet, vraag even om hulp. Dit zou namelijk niet moeten gebeuren. Ergens is dat best vervelend dat hij niet goed is tegen echte mensen, hoe zou dat nu komen?"
     ),
 
     # ----------------------------------------------------
@@ -419,10 +420,11 @@ Question(
         ],
         correct_idx=2,
         explanation=(
-            "Antwoord C: De AI traint razendsnel tegen willekeurige zetten, maar leert daardoor "
+            "De AI traint razendsnel tegen willekeurige zetten, maar leert daardoor "
             "nog niet hoe hij moet anticiperen op een mens die doelgericht een val opzet."
-            "Dit is ook de reden dat je na zoveel trainen nogsteeds van deze AI zou winnen."
-            "Je zou de AI goed kunnen trainen door zelf heeeel veel potjes ertegen te spelen, maar dat kost wel veel tijd ook."
+            " Dit is ook de reden dat je na zoveel trainen nogsteeds van deze AI zou winnen."
+            " Je zou de AI goed kunnen trainen door zelf heel veel potjes ertegen te spelen, maar dat kost wel veel tijd ook."
+            " In AI is het zo dat je AI slechts zo goed kan zijn als je data, hier is dat niet anders!"
             )
     ),
 
@@ -440,7 +442,7 @@ Question(
         ],
         correct_idx=0,
         explanation=(
-            "Antwoord A klopt! Aan het einde van de training staat de strategie al grotendeels vast. "
+            "Het eerste antwoord klopt! Aan het einde van de training staat de strategie al grotendeels vast. "
             "Door beloningen en straffen kleiner te maken (vergelijkbaar met 'learning rate decay'), "
             "voorkom je dat een toevallig verliespotje meteen een bewezen sterke tactiek overhoop gooit."
         )
@@ -482,7 +484,7 @@ Question(
         ],
         correct_idx=1,
         explanation=(
-            "Antwoord B! Dit heet de 'combinatorische explosie'. Boter-kaas-en-eieren heeft maar enkele honderden "
+            "Het tweede antwoord is correct! Dit heet de 'combinatorische explosie'. Boter-kaas-en-eieren heeft maar enkele honderden "
             "unieke bordstanden. Schaken heeft er naar schatting 10^43. Moderne schaak-AI's (zoals AlphaZero) "
             "gebruiken daarom neurale netwerken (Deep Learning) die patronen herkennen in plaats van elke situatie apart op te slaan."
         )
@@ -495,13 +497,14 @@ Question(
         id=29,
         prompt=(
             "Gefeliciteerd, je hebt de hele quiz en het trainingsproces doorlopen! "
-            "De snel-train-knop staat vanaf nu permanent open. Experimenteer gerust verder om te zien of je "
-            "de AI helemaal onverslaanbaar kunt maken."
+            "Experimenteer gerust verder om te zien of je "
+            "de AI helemaal onverslaanbaar kunt maken." 
+            " (Dit kan wel even duren natuurlijk, dus laat het misschien maar even...). "
+            "Je mag ook anderen helpen die misschien ergens vastlopen!"
         ),
-        permanent_autotrain=True,
+        #permanent_autotrain=True,
         options=[
-            "Ik ben tevreden en wil vrij verder spelen!",
-            "Ik wil alles resetten en helemaal opnieuw beginnen."
+            "Oke, goed om te weten!",
         ],
         correct_idx=0,
         explanation="Je kunt nu onbeperkt doortrainen of via de reset-knop weer met een leeg brein beginnen."
