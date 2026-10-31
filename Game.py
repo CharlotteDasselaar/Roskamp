@@ -23,7 +23,7 @@ def init_game_state():
     if "random_player" not in st.session_state:
         st.session_state.random_player = False
     if "n_auto_games" not in st.session_state:
-        st.session_state.n_auto_games = 1000
+        st.session_state.n_auto_games = 2000
     if "game_scored" not in st.session_state:
         st.session_state.game_scored = False
 
@@ -247,7 +247,6 @@ def game_render():
 
     # 6. Afhandeling van beurten en einde van het spel
     if st.session_state.winner:
-        # Stap 1: Pas de kralen exact één keer aan
         if not st.session_state.game_scored:
             if st.session_state.winner == "O":
                 update_pearls(3)
