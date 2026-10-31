@@ -1,7 +1,14 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-list_ntrain = [1000,2000 ,5000, 7000, 10000] # Vanaf wanneer is het te winnen voor de random speler en wanneer voor de speler himself?
+list_ntrain = [1000, 2000, 5000, 7000]
+# 0: --> geen verschil duidelijk
+# 1: -->  verschil duidelijk
+# 2: --> maakt geen fouten tegen random speler
+# 4: --> duidelijk dat tegen speler niet gaat werken.
+
+
+# Vanaf wanneer is het te winnen voor de random speler en wanneer voor de speler himself?
 
 @dataclass
 class Question:
@@ -192,8 +199,30 @@ QUESTIONS_BANK = [
     # ----------------------------------------------------
     # DEEL 3: Eerste Training & Spelregels van het Systeem
     # ----------------------------------------------------
-    Question(
+
+Question(
         id=10,
+        prompt=(
+            "Voordat we gaan trainen, doen we eerst een nulmeting! Druk op de knop 'Start Auto Speler'. "
+            "De computer speelt nu als willekeurige speler (X) tegen jouw nog ongetrainde AI (O). "
+            "Laat ze even 5 tot 10 potjes tegen elkaar spelen (en zet hem daarna weer op Stop). "
+            "Wat valt je op aan de resultaten van de AI?"
+        ),
+        options=[
+            "De AI wint veruit de meeste potjes van de willekeurige speler.",
+            "De AI wint ongeveer de helft van de tijd, mogelijk zelfs minder!",
+            "Bijna elk potje eindigt direct in een gelijkspel."
+        ],
+        correct_idx=1,
+        explanation=(
+            "Klopt! Omdat jouw AI nog helemaal ongetraind is, gokt hij blind. Omdat de AI als tweede speler (O) "
+            "begint, heeft de beginnende speler (X) bij willekeurige zetten een voordeel (X wint normaal ~58% van de potjes). "
+            "De AI is op dit moment dus nog een verliezer. Tijd om daar verandering in te brengen!"
+        )
+    ),
+
+    Question(
+        id=11,
         prompt=(
             "We beginnen deze AI steeds beter te snappen! Als beloning mag je op de 'Snel trainen'-knop drukken. "
             f"Hierdoor speelt de AI supersnel {list_ntrain[0]} wedstrijdjes tegen een willekeurige speler. "
@@ -204,14 +233,33 @@ QUESTIONS_BANK = [
         correct_idx=0,
         explanation="De simulatie draait op de achtergrond en past direct alle kralen aan!"
     ),
+Question(
+        id=12,
+        prompt=(
+            "Laten we kijken wat die 1000 potjes training hebben opgeleverd! "
+            "Druk op 'Start Auto Speler' en laat ze weer 3 tot 5 potjes tegen elkaar spelen (zet hem daarna weer op Stop). "
+            "Merk je al een enorm verschil in de uitslagen?"
+        ),
+        options=[
+            "Ja, de AI is opeens oppermachtig en wint bijna elk potje!",
+            "Nee, er is eigenlijk nog niet heel veel verschil; de AI verliest nog steeds geregeld.",
+            "De AI speelt vanaf nu alleen nog maar gelijkspel."
+        ],
+        correct_idx=1,
+        explanation=(
+            "Er is (als het goed is) nog niet heel veel veranderd! 1000 potjes klinkt als heel veel voor een mens, "
+            "maar voor een AI is dit nog maar een warming-up. Omdat er honderden verschillende bordstanden zijn, "
+            "heeft de AI veel situaties pas één of twee keer gezien. Hij heeft dus echt nog veel meer data en vlieguren nodig!"
+        )
+    ),
     Question(
-        id=11,
+        id=13,
         prompt=(
             "Stel je voor dat de AI vakje C2 kiest en de speler direct wint. "
             "Elk leeg vakje begint met 3 kralen en bij elk verlies verliest de AI 1 kraal voor die zet. "
             "Hoeveel wedstrijdjes moet de AI op deze manier verliezen totdat deze blunderzet nooit meer gedaan kan worden?"
         ),
-        image_path="assets/board_stance_c2_loss.png",
+        image_path="Bord voor vraag.png",
         options=["0", "4", "2", "3"],
         correct_idx=3,
         explanation=(
@@ -220,7 +268,7 @@ QUESTIONS_BANK = [
         )
     ),
     Question(
-        id=12,
+        id=14,
         prompt=(
             "Kies de juiste woorden: De AI wint een wedstrijd. Hierna krijgt de AI een beloning van 3 kralen voor "
             "[elke zet / de laatste zet] die hij [die wedstrijd / gedurende het hele trainingsproces] gemaakt heeft."
@@ -235,7 +283,7 @@ QUESTIONS_BANK = [
         explanation="Alle zetten die hebben bijgedragen aan de winst van díe specifieke wedstrijd krijgen de beloning."
     ),
     Question(
-        id=13,
+        id=15,
         prompt=(
             f"Tijd voor een upgrade! Druk op de snel-train-knop om de AI nog eens {list_ntrain[1]} wedstrijdjes "
             "te laten spelen tegen de willekeurige speler."
@@ -246,20 +294,22 @@ QUESTIONS_BANK = [
         explanation="De AI leert nu razendsnel patronen herkennen van duizenden wedstrijden tegelijk."
     ),
     Question(
-        id=14,
+        id=16,
         prompt=(
-            "We hebben de AI al flink getraind. Zet de Random Speler eens aan (of speel zelf een potje). "
+            "We hebben de AI al flink getraind. Zet de Random Speler weer eens aan en speel zelf een paar potje). "
             "Merk je al dat de AI vooruitgaat?"
         ),
         options=[
-            "Ja, ik merk dat de AI is verbeterd!",
-            "Ik merk nog geen verschil eigenlijk..."
+            "Ik kan de AI niet verslaan en de random speler ook niet!",
+            "Tegen de random speler gaat het best wel wat beter, maar ikzelf win nog redelijk makkelijk",
+            "Zowel ik als speler als de random speler verslaan de AI makkelijk",
+            "Ik kan de AI speler amper verslaan, maar de random speler doet het wel zo nu en dan hele."
         ],
-        correct_idx=0,
-        explanation="Het trainen kost even tijd! Zometeen geven we hem nog veel meer vlieguren."
+        correct_idx=1,
+        explanation="In principe zou de random speler het best wel wat beter moeten doen op dit punt, maar je zou zelf nog redelijk makkelijk moeten kunnen winnen. Dat is misschien gek... binnenkort kijken we waarom dit is!"
     ),
     Question(
-        id=15,
+        id=17,
         prompt=(
             "Als de AI gelijk speelt, worden de kralen van de gemaakte zetten verhoogd met 1. "
             "Wat zou een goede reden zijn om een beloning te geven terwijl de AI niet wint? "
@@ -283,7 +333,7 @@ QUESTIONS_BANK = [
     # DEEL 4: Data & Kansen Berekenen (Gevorderd)
     # ----------------------------------------------------
     Question(
-        id=16,
+        id=18,
         prompt=(
             "In de code zien de kralen er zo uit: 021003241. "
             "De volgorde staat voor de vakjes: A1, A2, A3, B1, B2, B3, C1, C2, C3. "
@@ -294,7 +344,7 @@ QUESTIONS_BANK = [
         explanation="Het 8e getal in de reeks is een 4, en de 8e positie hoort bij vakje C2."
     ),
     Question(
-        id=17,
+        id=19,
         prompt=f"Laten we de AI weer een trainingsboost geven. Druk op de snel-train-knop voor {list_ntrain[2]} potjes!",
         enable_autotrain= list_ntrain[2],
         options=[f"Simuleer {list_ntrain[2]} potjes!"],
@@ -302,17 +352,18 @@ QUESTIONS_BANK = [
         explanation=f"{list_ntrain[2]} potjes worden in een fractie van een seconde doorgerekend."
     ),
     Question(
-        id=18,
+        id=20,
         prompt="Speel weer een potje tegen de AI. Merk je dat hij zijn verdediging beter op orde heeft?",
         options=[
-            "Ja, hij trapt niet meer zomaar in simpele trucs!",
-            "Nee, ik kan hem nog steeds eenvoudig inmaken."
+            "Ik win altijd! De random player verliest altijd.",
+            "De AI wordt beter, maar ik kan er nog steeds van winnen. Hij wint (vrijwel) altijd tegen de random speler.",
+            "Nee, er is helemaal geen verbetering geweest deze hele tijd."
         ],
-        correct_idx=0,
-        explanation="Hoe vaker een situatie voorkomt, hoe sneller slechte zetten worden weggestraft."
+        correct_idx=1,
+        explanation="In principe hoort het tweede antwoord het juiste antwoord te zijn. Speel anders nog een paar keer of dit klopt."
     ),
     Question(
-        id=19,
+        id=21,
         prompt=(
             "Bij de start van de training begint het bord in code als volgt: 3,3,3,3,3,3,3,3,3. "
             "Elk getal staat voor de kralen van één vakje (van A1 t/m C3). "
@@ -323,7 +374,7 @@ QUESTIONS_BANK = [
         explanation="Totaal aantal kralen = 9 x 3 = 27. Vakje C1 heeft 3 kralen. De kans is 3/27, wat gelijk is aan 1/9."
     ),
     Question(
-        id=20,
+        id=22,
         prompt=(
             "De kralen van een bord zien er zo uit: 303020003 (3 voor A1, 3 voor A3, 2 voor B2 en 3 voor C3). "
             "Wat is de kans dat de AI vakje B2 kiest? (Geschreven als breuk)"
@@ -333,29 +384,51 @@ QUESTIONS_BANK = [
         explanation="B2 heeft 2 kralen. Het totaal aantal kralen is 3 + 3 + 2 + 3 = 11. De kans is dus 2/11."
     ),
     Question(
-        id=21,
-        prompt=f"Tijd om nog een extra ronde van {list_ntrain[3]} wedstrijdjes te trainen!",
+        id=23,
+        prompt=f"Tijd om nog een laatste ronde zoveel mogelijk {list_ntrain[3]} wedstrijdjes te trainen! Mogelijk kan je dan zelfs als speler niet winnen!",
         enable_autotrain=list_ntrain[3],
-        options=[f"Train nog {list_ntrain[3]} potjes!"],
+        options=[f"Train nog {list_ntrain[3]} potjes! We gaan het proberen! Dit kan even duren"],
         correct_idx=0,
-        explanation="De AI verfijnt nu ook de zeldzamere spelsituaties."
+        explanation="Laten we kijken hoe dit gaat..."
     ),
     Question(
-        id=22,
+        id=24,
         prompt="Test de AI nogmaals uit. Hoe gaat het spel nu?",
         options=[
-            "De AI speelt merkbaar sterker!",
-            "Ik merk nog niet direct verschil."
+            "Ik kan niet winnen van de AI... hij blijft me verslaan",
+            "De AI speelt niet heel veel meer beter dan de vorige keer."
         ],
-        correct_idx=0,
-        explanation="Als het goed is, maakt de AI vrijwel geen domme beginnersfouten meer."
+        correct_idx=1,
+        explanation="De AI zou nog verslaanbaar moeten zijn, zelfs na zoveel trainingssessies. Ergens is dat best vervelend, hoe zou dat nu komen?"
     ),
 
     # ----------------------------------------------------
     # DEEL 5: Optimalisatie & Expert Vragen
     # ----------------------------------------------------
+
     Question(
-        id=23,
+        id=25,
+        prompt=(
+            "Met de optie 'Random Speler' kun je de AI snel trainen. "
+            "Wat zijn hier de voor- en nadelen van?"
+        ),
+        options=[
+            "Voordeel: tegenstander wordt ook slimmer; Nadeel: kost de computer veel energie.",
+            "Voordeel: heel snel en automatisch; Nadeel: kost de computer extreem veel energie.",
+            "Voordeel: heel snel en automatisch; Nadeel: de willekeurige speler leert de AI niet verdedigen tegen slimme menselijke tactieken.",
+            "Voordeel: tegenstander wordt ook slimmer; Nadeel: willekeurige speler is niet zo slim als een mens."
+        ],
+        correct_idx=2,
+        explanation=(
+            "Antwoord C: De AI traint razendsnel tegen willekeurige zetten, maar leert daardoor "
+            "nog niet hoe hij moet anticiperen op een mens die doelgericht een val opzet."
+            "Dit is ook de reden dat je na zoveel trainen nogsteeds van deze AI zou winnen."
+            "Je zou de AI goed kunnen trainen door zelf heeeel veel potjes ertegen te spelen, maar dat kost wel veel tijd ook."
+            )
+    ),
+
+    Question(
+        id=26,
         prompt=(
             "Expert-vraag: Nu blijven de beloningen (+3) en straffen (-1) gedurende het hele proces hetzelfde. "
             "Wat zou een goede verbetering zijn voor het trainingsproces?"
@@ -373,59 +446,16 @@ QUESTIONS_BANK = [
             "voorkom je dat een toevallig verliespotje meteen een bewezen sterke tactiek overhoop gooit."
         )
     ),
-    Question(
-        id=24,
-        prompt=(
-            "Met de optie 'Random Speler' kun je de AI snel trainen. "
-            "Wat zijn hier de voor- en nadelen van?"
-        ),
-        options=[
-            "Voordeel: tegenstander wordt ook slimmer; Nadeel: kost de computer veel energie.",
-            "Voordeel: heel snel en automatisch; Nadeel: kost de computer extreem veel energie.",
-            "Voordeel: heel snel en automatisch; Nadeel: de willekeurige speler leert de AI niet verdedigen tegen slimme menselijke tactieken.",
-            "Voordeel: tegenstander wordt ook slimmer; Nadeel: willekeurige speler is niet zo slim als een mens."
-        ],
-        correct_idx=2,
-        explanation=(
-            "Antwoord C: De AI traint razendsnel tegen willekeurige zetten, maar leert daardoor "
-            "nog niet hoe hij moet anticiperen op een mens die doelgericht een val opzet."
-        )
-    ),
-    Question(
-        id=25,
-        prompt=f"We geven de AI nu een enorme boost van {list_ntrain[4]} potjes tegelijk!",
-        enable_autotrain=list_ntrain[4],
-        options=[f"Train {list_ntrain[4]} potjes!"],
-        correct_idx=0,
-        explanation="Met in totaal meer dan tienduizend trainingspotjes is vrijwel elk bord minimaal één keer gezien."
-    ),
-    Question(
-        id=26,
-        prompt="Probeer nog eens te winnen van de AI. Lukt het nog?",
-        options=[
-            "Winnen is nu bijna onmogelijk (hoogstens gelijkspel)!",
-            "Het lukt me nog steeds af en toe."
-        ],
-        correct_idx=0,
-        explanation="Een perfect getrainde boter-kaas-en-eieren-AI kan wiskundig gezien niet meer verliezen."
-    ),
+
+
     Question(
         id=27,
         prompt=(
             "Expert-vraag (geen zorgen als je geen programmeur bent!): "
             "Bekijk de onderstaande code. Wat gebeurt hier ongeveer? Typ een korte samenvatting:"
         ),
-        code_snippet=(
-            "if st.session_state.winner:\n"
-            "    if not st.session_state.game_scored:\n"
-            "        if st.session_state.winner == 'O':\n"
-            "            update_pearls(3)   # AI wint\n"
-            "        elif st.session_state.winner == 'Tie':\n"
-            "            update_pearls(1)   # Gelijkspel\n"
-            "        else:\n"
-            "            update_pearls(-1)  # Speler wint (AI verliest)\n"
-            "        st.session_state.game_scored = True"
-        ),
+        ##Change into photo
+        image_path = "Foto code voor vraag.png",
         has_text_input=True,
         revealed_text=(
             "Als er een winnaar/eindstand is en de score nog niet is verwerkt: "

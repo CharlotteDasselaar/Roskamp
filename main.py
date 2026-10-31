@@ -3,6 +3,8 @@ import streamlit as st
 from Game import game_render
 from Game import train_simulation
 from Questions import QUESTIONS_BANK
+import os
+from pathlib import Path
 
 # 1. State initialisatie voor de quiz
 def init_quiz():
@@ -35,6 +37,15 @@ with col_quiz:
 
         st.markdown(f"**Vraag {idx + 1} van {len(QUESTIONS_BANK)}**")
         st.write(q.prompt)
+
+        BASE_DIR = Path(__file__).resolve().parent
+
+        if getattr(q, "image_path", None):
+            img_full_path = BASE_DIR / q.image_path
+            if img_full_path.exists():
+                st.image(str(img_full_path), use_container_width=True)
+            else:
+                st.warning(f"Afbeelding niet gevonden: {q.image_path}")
 
         # Keuzemenu
         user_choice = st.radio(

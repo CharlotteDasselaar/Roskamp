@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 import time
+import os
 import pandas as pd
 
 st.set_page_config(page_title="Tic-Tac-Toe", page_icon="🎮")
@@ -121,10 +122,10 @@ def update_pearls(score):
             index_for_AImoves = (board_tot_moves - 1) // 2
             if index_for_AImoves < len(st.session_state.AI_moves):
                 AImove = st.session_state.AI_moves[index_for_AImoves]
-                multiplier = min(3, index_for_AImoves + 1)
-                new_value = st.session_state.current_game[b][AImove] + (score * multiplier)
-                if new_value <= 0:
-                    new_value = random.choice([0,0,0,0,1])
+                #multiplier = min(3, index_for_AImoves + 1)
+                new_value = st.session_state.current_game[b][AImove] + score
+                #if new_value <= 0:
+                 #   new_value = random.choice([0,0,0,0,1])
                 st.session_state.current_game[b][AImove] = max(0, new_value)
 
 
