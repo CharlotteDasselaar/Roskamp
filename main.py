@@ -5,6 +5,7 @@ from Game import game_render, train_simulation
 from Questions import QUESTIONS_BANK
 
 BASE_DIR = Path(__file__).resolve().parent
+#
 
 # 1. State initialisatie voor de quiz
 def init_quiz():
