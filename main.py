@@ -31,6 +31,7 @@ init_quiz()
 # 2. Layout verdelen (Spel links, Vragen rechts)
 col_game, col_quiz = st.columns([4, 5], gap="large")
 
+
 with col_game:
     st.subheader("🎮 Boter Kaas en AIeren")
     game_render()
@@ -79,7 +80,7 @@ with col_quiz:
 
             # Stap 2: Antwoord is verstuurd -> Toon modelantwoord en laat speler zelf kiezen
             else:
-                st.info(f"📋 **Het juiste antwoord:**\n\n{q.revealed_text}")
+                st.info(f"📋 **Een voorbeeldantwoord:**\n\n{q.revealed_text}")
 
                 user_choice = st.radio(
                     "Klopt dit met wat jij had opgeschreven?",
